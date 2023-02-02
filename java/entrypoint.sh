@@ -10,8 +10,10 @@ export INTERNAL_IP
 cd /home/container || exit 1
 java -version
 
-# convert all of the "{{VARIABLE}}" parts of the command into the expected shell
-# variable format of "${VARIABLE}" before evaluating the string and automatically
-# replacing the values
-PARSED=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
-exec env ${PARSED}
+if [ -d /deploy ]; then
+    # convert all of the "{{VARIABLE}}" parts of the command into the expected shell
+    # variable format of "${VARIABLE}" before evaluating the string and automatically
+    # replacing the values
+    PARSED=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
+    exec env ${PARSED}
+fi
